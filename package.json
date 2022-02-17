@@ -19,6 +19,7 @@
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
     "@netlify/functions": "^1.0.0",
+    "netlify-graph-auth": "^0.0.3",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest"

@@ -1,22 +1,48 @@
-query listPlaylists @netlify(id: """33cf44c2-62ba-44a2-b74e-7fb93aba18f5""", doc: """An example query to start with.""") {
+query listPlaylists @netlify(id: """33cf44c2-62ba-44a2-b74e-7fb93aba18f5""", doc: """List my playlists""") {
   spotify {
     me {
       displayName
       playlists {
+        id
         name
-        type
         description
-        collaborative
+        href
         images {
           height
           url
           width
         }
-        id
-        href
+        public
       }
       followers {
         total
+      }
+    }
+  }
+}
+
+query listPlaylistSongs($id: String = "78UEwC6gbcRWImcDHxINBa") @netlify(id: """db8cb868-6288-4a34-b035-40b25c3c7df4""", doc: """An empty query to start from""") {
+  spotify {
+    playlist(id: $id) {
+      name
+      id
+      tracks {
+        id
+        name
+        durationMs
+        isPlayable
+        previewUrl
+        trackNumber
+        album {
+          images {
+            url
+            height
+            width
+          }
+        }
+        artists {
+          name
+        }
       }
     }
   }
