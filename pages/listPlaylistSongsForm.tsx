@@ -1,8 +1,6 @@
-import React, { useState } from "react";
-
-import { Auth } from "netlify-graph-auth";
 import Head from "next/head";
-
+import React, { useState } from "react";
+import { Auth } from "netlify-graph-auth";
 import NetlifyGraphAuth = Auth.NetlifyGraphAuth;
 
 export default function Form(props) {
@@ -18,15 +16,14 @@ export default function Form(props) {
   );
 
   const submitForm = async () => {
-    const args = {
+    const res = await fetch("/api/listPlaylistSongs", {
       body: JSON.stringify(formVariables),
       headers: {
         "Content-Type": "application/json",
         ...auth?.authHeaders(),
       },
       method: "POST",
-    }
-    const res = await fetch("/api/listPlaylists", args);
+    });
 
     const formResult = await res.json();
     setResult(formResult);
@@ -37,7 +34,7 @@ export default function Form(props) {
   return (
     <div className="container">
       <Head>
-        <title>listPlaylists form</title>
+        <title>listPlaylistSongs form</title>
       </Head>
       <main>
         <h1>{props.title}</h1>
@@ -47,6 +44,16 @@ export default function Form(props) {
             submitForm();
           }}
         >
+          <label htmlFor="id">id</label>
+          <input
+            id="id"
+            type="text"
+            onChange={updateFormVariables(
+              setFormVariables,
+              ["id"],
+              (value) => value
+            )}
+          />
           <input type="submit" />
         </form>
         {needsLoginService ? (
@@ -84,7 +91,7 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-      title: "listPlaylists form",
+      title: "listPlaylistSongs form",
       siteId: siteId,
     },
   };
