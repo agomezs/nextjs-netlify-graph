@@ -1,4 +1,8 @@
-# Next.js with TypeScript example
+# Next + Netlify graph
+
+Spotify API integration
+
+![Demo of the Spotify tool](media/spotify.gif)
 
 ## Configure netlify
 
