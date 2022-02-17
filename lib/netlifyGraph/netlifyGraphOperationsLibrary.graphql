@@ -1,0 +1,23 @@
+query listPlaylists @netlify(id: """33cf44c2-62ba-44a2-b74e-7fb93aba18f5""", doc: """An example query to start with.""") {
+  spotify {
+    me {
+      displayName
+      playlists {
+        name
+        type
+        description
+        collaborative
+        images {
+          height
+          url
+          width
+        }
+        id
+        href
+      }
+      followers {
+        total
+      }
+    }
+  }
+}

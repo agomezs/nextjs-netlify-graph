@@ -1,65 +1,33 @@
-import { Button, Card, CardActions, CardContent, CardMedia, Grid, Typography } from '@mui/material'
 import { GetServerSideProps, GetStaticProps, InferGetServerSidePropsType, InferGetStaticPropsType, NextPage } from 'next/types'
+import { ListPlaylists, fetchListPlaylists } from '../lib/netlifyGraph'
+import { PostCardSample, PostCardSampleProps } from '../src/components/card';
 
-import Link from '../src/Link';
+import {Grid} from '@mui/material'
 
-const MediaSourcesRoot = '/'
-export const Sample = `${MediaSourcesRoot}sample/contemplative-reptile.jpg`
-
-interface Post extends PostCardSampleProps {
-  id: string
-}
+type Me = ListPlaylists["data"]["spotify"]["me"]
+type Playlists = Me["playlists"]
 
 export const About: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (props) => {
   console.log('props', props)
   return (
     <Grid container justifyContent={'center'}>
-      {props.posts.map((post) => (
-        <PostCardSample body={post.body} key={post.id} title={post.title} />
+      {props.items.map((playlist) => (
+        <PostCardSample body={playlist.description} key={playlist.name} title={playlist.name} />
       ))}
     </Grid>
   )
 }
 
-export const getStaticProps: GetStaticProps<{ posts: Post[] }> = async () => {
+export const getStaticProps: GetStaticProps<{ items:  Playlists, me: Me }> = async () => {
   const allPosts = await fetch(`https://jsonplaceholder.typicode.com/posts`)
-  const posts: Post[] = await allPosts.json()
+  // const posts: Post[] = await allPosts.json()
+
+  const data = await fetchListPlaylists({})
+  const items = data.data.spotify.me?.playlists || []
 
   return {
-    props: { posts },
+    props: { items: items, me: data.data.spotify.me },
   }
 }
 
 export default About
-
-
-interface PostCardSampleProps {
-   title: string
-   body: string
-   objectFit?: 'cover' | 'contain'
- }
- 
- function PostCardSample({ title, body, objectFit = 'cover' }: PostCardSampleProps) {
-   return (
-     <Card className="card-small" sx={{ display: 'flex', flexDirection: 'column' }}>
-       <CardMedia title="the green iguana">
-         {/* <Image src={Sample} width={300} height={150} objectFit={objectFit} /> */}
-         <img src={Sample} height={150} width={300} alt="the green iguana" />
-       </CardMedia>
-       <CardContent>
-         <Typography gutterBottom variant="h5" component="div">
-           {title}
-         </Typography>
-         <Typography variant="body2" color="text.secondary">
-           {body}
-         </Typography>
-       </CardContent>
-       <CardActions sx={{ mt: 'auto' }}>
-        <Button variant="contained" component={Link} noLinkStyle href="/">
-              Go to the home page
-          </Button>
-       </CardActions>
-     </Card>
-   )
- }
- 
